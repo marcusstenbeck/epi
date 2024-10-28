@@ -1,6 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { Track } from '../openapi/requests';
-import styles from './AudioPlayer.module.css';
+import { cx } from '../utils/cx';
+
+const styles = {
+  audioPlayer: cx(
+    'fixed bottom-2 left-2 right-2 h-20 bg-neutral-800 rounded-md flex items-center'
+  ),
+  togglePlaybackButton: cx(
+    'flex items-center justify-center',
+    'w-12 h-12 rounded-full bg-white shadow-none mx-6 ml-4'
+  ),
+  trackInfo: cx('w-48'),
+  trackTitle: cx('font-semibold'),
+  trackArtist: cx('text-gray-500'),
+  sliderContainer: cx('flex-grow mr-6'),
+  slider: cx('w-full'),
+};
 
 type AudioPlayerProps = {
   track: Track;

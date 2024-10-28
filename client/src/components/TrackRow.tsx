@@ -1,5 +1,18 @@
 import { Track } from '../openapi/requests';
-import styles from './TrackRow.module.css';
+import { cx } from '../utils/cx';
+
+const styles = {
+  trackRow: cx(
+    'flex items-center h-20 border-b border-neutral-800',
+    'last:border-b-0'
+  ),
+  trackPlay: cx(
+    'flex items-center justify-center',
+    'w-12 h-12 rounded-full bg-neutral-800 shadow-none mr-4'
+  ),
+  trackTitle: cx('font-semibold'),
+  trackArtist: cx('text-neutral-500'),
+};
 
 type TrackRowProps = {
   track: Track;
@@ -20,7 +33,7 @@ export function TrackRow({ track, onPlay }: TrackRowProps) {
           <path d="M20 12L8 5V19L20 12Z" fill="white" />
         </svg>
       </button>
-      <div className={styles.trackInfo}>
+      <div>
         <div className={styles.trackTitle}>{track.title}</div>
         <div className={styles.trackArtist}>
           {track.main_artists.join(', ')}
