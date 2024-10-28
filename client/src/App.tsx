@@ -1,21 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styles from './App.module.css';
 import logo from './assets/logo.svg';
 
 import TrackRow from './components/TrackRow';
 import AudioPlayer from './components/AudioPlayer';
 
+import { useTracksList } from './openapi/queries';
+
 function App() {
-  const [tracks, setTracks] = useState([]);
   const [currentTrack, setCurrentTrack] = useState();
 
-  useEffect(() => {
-    fetch('http://0.0.0.0:8000/tracks/', { mode: 'cors' })
-      .then((res) => res.json())
-      .then((data) => setTracks(data));
-  }, []);
+  const { data: tracks } = useTracksList();
 
-  const handlePlay = (track) => setCurrentTrack(track);
+  const handlePlay = (track: any) => setCurrentTrack(track);
 
   return (
     <>
@@ -33,7 +30,7 @@ function App() {
             </li>
           </ul>
         </nav>
-        {tracks.map((track, ix) => (
+        {tracks?.map((track, ix) => (
           <TrackRow key={ix} track={track} handlePlay={handlePlay} />
         ))}
       </main>
