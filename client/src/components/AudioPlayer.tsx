@@ -1,10 +1,10 @@
-import React, { useRef, useState, useEffect } from "react";
-import styles from "./AudioPlayer.module.css";
+import React, { useRef, useState, useEffect } from 'react';
+import styles from './AudioPlayer.module.css';
 
-function AudioPlayer({ track }) {
+function AudioPlayer({ track }: any) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const audioRef = useRef(null);
+  const audioRef = useRef<any>(null);
 
   const handlePlay = () => {
     setIsPlaying(true);
@@ -14,11 +14,11 @@ function AudioPlayer({ track }) {
     setIsPlaying(false);
   };
 
-  const handleTimeUpdate = (e) => {
+  const handleTimeUpdate = (e: any) => {
     setProgress(e.target.currentTime / e.target.duration);
   };
 
-  const handleSliderChange = (e) => {
+  const handleSliderChange = (e: any) => {
     audioRef.current.currentTime =
       (e.target.value / 1000) * audioRef.current.duration;
   };
@@ -32,9 +32,9 @@ function AudioPlayer({ track }) {
   };
 
   useEffect(() => {
-    audioRef.current.addEventListener("play", handlePlay);
-    audioRef.current.addEventListener("pause", handlePause);
-    audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
+    audioRef.current.addEventListener('play', handlePlay);
+    audioRef.current.addEventListener('pause', handlePause);
+    audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
   }, []);
 
   useEffect(() => {
@@ -80,7 +80,7 @@ function AudioPlayer({ track }) {
         <div className={styles.trackInfo}>
           <div className={styles.trackTitle}>{track.title}</div>
           <div className={styles.trackArtist}>
-            {track.main_artists.join(", ")}
+            {track.main_artists.join(', ')}
           </div>
         </div>
         <div className={styles.sliderContainer}>
