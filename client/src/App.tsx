@@ -2,17 +2,18 @@ import { useState } from 'react';
 import styles from './App.module.css';
 import logo from './assets/logo.svg';
 
-import TrackRow from './components/TrackRow';
-import AudioPlayer from './components/AudioPlayer';
+import { TrackRow } from './components/TrackRow';
+import { AudioPlayer } from './components/AudioPlayer';
 
 import { useTracksList } from './openapi/queries';
+import { Track } from './openapi/requests';
 
 function App() {
-  const [currentTrack, setCurrentTrack] = useState();
+  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
 
   const { data: tracks } = useTracksList();
 
-  const handlePlay = (track: any) => setCurrentTrack(track);
+  const handlePlay = (track: Track) => setCurrentTrack(track);
 
   return (
     <>
@@ -31,7 +32,7 @@ function App() {
           </ul>
         </nav>
         {tracks?.map((track, ix) => (
-          <TrackRow key={ix} track={track} handlePlay={handlePlay} />
+          <TrackRow key={ix} track={track} onPlay={handlePlay} />
         ))}
       </main>
       {currentTrack && <AudioPlayer track={currentTrack} />}

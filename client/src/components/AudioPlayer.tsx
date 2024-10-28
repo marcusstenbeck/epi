@@ -1,10 +1,15 @@
-import React, { useRef, useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Track } from '../openapi/requests';
 import styles from './AudioPlayer.module.css';
 
-function AudioPlayer({ track }: any) {
+type AudioPlayerProps = {
+  track: Track;
+};
+
+export function AudioPlayer({ track }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const audioRef = useRef<any>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handlePlay = () => {
     setIsPlaying(true);
@@ -14,16 +19,23 @@ function AudioPlayer({ track }: any) {
     setIsPlaying(false);
   };
 
-  const handleTimeUpdate = (e: any) => {
-    setProgress(e.target.currentTime / e.target.duration);
+  const handleTimeUpdate: React.ChangeEventHandler<HTMLAudioElement> = (
+    event
+  ) => {
+    setProgress(event.target.currentTime / event.target.duration);
   };
 
-  const handleSliderChange = (e: any) => {
+  const handleSliderChange: React.ChangeEventHandler<HTMLInputElement> = (
+    event
+  ) => {
+    if (!audioRef.current) return;
     audioRef.current.currentTime =
-      (e.target.value / 1000) * audioRef.current.duration;
+      (parseInt(event.target.value, 10) / 1000) * audioRef.current.duration;
   };
 
   const handleTogglePlaybackClick = () => {
+    if (!audioRef.current) return;
+
     if (audioRef.current.paused) {
       audioRef.current.play();
     } else {
@@ -32,19 +44,20 @@ function AudioPlayer({ track }: any) {
   };
 
   useEffect(() => {
-    audioRef.current.addEventListener('play', handlePlay);
-    audioRef.current.addEventListener('pause', handlePause);
-    audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
-  }, []);
-
-  useEffect(() => {
+    if (!audioRef.current) return;
     audioRef.current.play();
     audioRef.current.currentTime = 0;
   }, [track]);
 
   return (
     <>
-      <audio src={track.audio} ref={audioRef} />
+      <audio
+        src={track.audio}
+        ref={audioRef}
+        onPlay={handlePlay}
+        onPause={handlePause}
+        onTimeUpdate={handleTimeUpdate}
+      />
       <div className={styles.audioPlayer}>
         <button
           className={styles.togglePlaybackButton}
@@ -97,5 +110,3 @@ function AudioPlayer({ track }: any) {
     </>
   );
 }
-
-export default AudioPlayer;

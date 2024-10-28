@@ -1,10 +1,15 @@
-import React from 'react';
+import { Track } from '../openapi/requests';
 import styles from './TrackRow.module.css';
 
-function TrackRow({ track, handlePlay }: any) {
+type TrackRowProps = {
+  track: Track;
+  onPlay: (track: Track) => void;
+};
+
+export function TrackRow({ track, onPlay }: TrackRowProps) {
   return (
     <div className={styles.trackRow}>
-      <button className={styles.trackPlay} onClick={() => handlePlay(track)}>
+      <button className={styles.trackPlay} onClick={() => onPlay(track)}>
         <svg
           width="24"
           height="24"
@@ -24,5 +29,3 @@ function TrackRow({ track, handlePlay }: any) {
     </div>
   );
 }
-
-export default TrackRow;
