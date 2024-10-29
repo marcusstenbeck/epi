@@ -1,78 +1,48 @@
-import { useEffect, useRef, useState } from 'react';
-import { Track } from '../openapi/requests';
-import { cx } from '../utils/cx';
+import {
+  useAudioPlayer,
+  useAudioPlayerState,
+} from '@/contexts/AudioPlayerContext';
+import { cn } from '@/lib/utils';
 
 const styles = {
-  audioPlayer: cx(
+  audioPlayer: cn(
     'fixed bottom-2 left-2 right-2 h-20 bg-neutral-800 rounded-md flex items-center'
   ),
-  togglePlaybackButton: cx(
+  togglePlaybackButton: cn(
     'flex items-center justify-center',
     'w-12 h-12 rounded-full bg-white shadow-none mx-6 ml-4'
   ),
-  trackInfo: cx('w-48'),
-  trackTitle: cx('font-semibold'),
-  trackArtist: cx('text-gray-500'),
-  sliderContainer: cx('flex-grow mr-6'),
-  slider: cx('w-full'),
+  trackInfo: cn('w-48'),
+  trackTitle: cn('font-semibold'),
+  trackArtist: cn('text-gray-500'),
+  sliderContainer: cn('flex-grow mr-6'),
+  slider: cn('w-full'),
 };
 
-type AudioPlayerProps = {
-  track: Track;
-};
-
-export function AudioPlayer({ track }: AudioPlayerProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const handlePlay = () => {
-    setIsPlaying(true);
-  };
-
-  const handlePause = () => {
-    setIsPlaying(false);
-  };
-
-  const handleTimeUpdate: React.ChangeEventHandler<HTMLAudioElement> = (
-    event
-  ) => {
-    setProgress(event.target.currentTime / event.target.duration);
-  };
+export function AudioPlayerBar() {
+  const audioPlayer = useAudioPlayer();
+  const { progress, isPlaying, currentTrack: track } = useAudioPlayerState();
 
   const handleSliderChange: React.ChangeEventHandler<HTMLInputElement> = (
     event
   ) => {
-    if (!audioRef.current) return;
-    audioRef.current.currentTime =
-      (parseInt(event.target.value, 10) / 1000) * audioRef.current.duration;
+    audioPlayer.seekProgress(parseInt(event.target.value, 10) / 1000);
   };
 
   const handleTogglePlaybackClick = () => {
-    if (!audioRef.current) return;
-
-    if (audioRef.current.paused) {
-      audioRef.current.play();
+    if (audioPlayer.state.isPlaying) {
+      audioPlayer.pause();
     } else {
-      audioRef.current.pause();
+      audioPlayer.play();
     }
   };
 
-  useEffect(() => {
-    if (!audioRef.current) return;
-    audioRef.current.play();
-    audioRef.current.currentTime = 0;
-  }, [track]);
+  if (!track) {
+    return null;
+  }
 
   return (
     <>
-      <audio
-        src={track.audio}
-        ref={audioRef}
-        onPlay={handlePlay}
-        onPause={handlePause}
-        onTimeUpdate={handleTimeUpdate}
-      />
       <div className={styles.audioPlayer}>
         <button
           className={styles.togglePlaybackButton}

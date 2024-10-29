@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import { client } from './openapi/requests/services.gen.ts';
 import { routeTree } from './routeTree.gen.ts';
+import { AudioPlayerContextProvider } from './contexts/AudioPlayerContext';
 
 client.setConfig({
   baseUrl: 'http://localhost:8000',
@@ -34,7 +35,9 @@ declare module '@tanstack/react-router' {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <AudioPlayerContextProvider>
+        <RouterProvider router={router} />
+      </AudioPlayerContextProvider>
     </QueryClientProvider>
   </StrictMode>
 );

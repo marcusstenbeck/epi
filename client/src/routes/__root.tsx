@@ -1,9 +1,9 @@
+import { AudioPlayerBar } from '@/components/AudioPlayerBar';
+import { Navigation } from '@/components/Navigation';
 import { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
-import { Navigation } from '../components/Navigation';
-import { cx } from '../utils/cx';
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
@@ -11,17 +11,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   }
 );
 
-const styles = {
-  app: cx('p-16'),
-};
-
 function RootComponent() {
   return (
     <>
-      <main className={styles.app}>
+      <main className="p-16">
         <Navigation />
         <Outlet />
       </main>
+      <AudioPlayerBar />
       <ReactQueryDevtools buttonPosition="top-right" />
       <TanStackRouterDevtools position="top-left" />
     </>
