@@ -10,8 +10,11 @@ class TrackViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class PlaylistViewSet(viewsets.ModelViewSet):
-    queryset = models.Playlist.objects.all()
+    queryset = models.Playlist.objects.all().order_by('id')
     serializer_class = serializers.PlaylistSerializer
     permission_classes = [permissions.AllowAny]
 
-    
+    def get_serializer_class(self):
+        if self.action == 'retrieve':  # Use a different serializer for retrieving a single playlist
+            return serializers.DetailedPlaylistSerializer
+        return super().get_serializer_class()
