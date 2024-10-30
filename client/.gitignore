@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # Generated OpenAPI hooks
-src/openapi
+# src/openapi
